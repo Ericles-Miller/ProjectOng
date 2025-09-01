@@ -19,7 +19,7 @@ export class CampaignsService {
   ) {}
 
   async create(
-    { title, description, goalAmount, startDate, endDate }: CreateCampaignDto,
+    { title, description, goalAmount, startDate, endDate, category }: CreateCampaignDto,
     ngoId: string,
   ): Promise<Campaign> {
     try {
@@ -36,6 +36,7 @@ export class CampaignsService {
         new Date(startDate),
         new Date(endDate),
         ngoId,
+        category,
       );
 
       return await this.campaignsRepository.save(campaign);
@@ -47,9 +48,13 @@ export class CampaignsService {
     }
   }
 
-  async findAll(): Promise<Campaign[]> {
+  async findAll(
+    title?: string,
+    category?: 'campaign' | 'opportunity',
+    status?: 'active' | 'completed' | 'cancelled',
+  ): Promise<Campaign[]> {
     try {
-      return await this.campaignsRepository.find();
+      return await this.campaignsRepository.find({ where: { title, category, status } });
     } catch {
       throw new InternalServerErrorException('Error fetching campaigns');
     }
@@ -83,13 +88,23 @@ export class CampaignsService {
         throw new NotFoundException('Campaign not found');
       }
 
+      if (campaign.status !== 'active') {
+        throw new BadRequestException('Campaign is not active');
+      }
+
       const donation = new Donation(amount, anonymous, id, message, donorName, donorEmail);
+
+      await this.campaignsRepository.update(id, {
+        numberOfDonations: campaign.numberOfDonations + 1,
+        currentAmount: Number(campaign.currentAmount) + Number(amount),
+      });
 
       await this.donationsRepository.save(donation);
     } catch (error) {
-      if (error instanceof NotFoundException) {
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
         throw error;
       }
+      console.error('Error in donate method:', error);
       throw new InternalServerErrorException('Error donating to campaign');
     }
   }

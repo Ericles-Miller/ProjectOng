@@ -1,306 +1,255 @@
-# 🚀 ProjectOng API
+# Voluntariar
 
-API para gerenciamento de ONGs e voluntários, permitindo a criação de projetos, campanhas de doação e sistema de avaliações.
+O Voluntariar é uma plataforma digital que conecta voluntários a organizações sem fins lucrativos, facilitando a busca por oportunidades alinhadas a interesses, habilidades e disponibilidade, promovendo engajamento social e impacto positivo na comunidade.
+
+⸻
+
+## 🎯 Finalidades
+
+- **Para Voluntários**: encontrar facilmente vagas de voluntariado compatíveis com seus perfis.
+- **Para Organizações**: captar, organizar e gerenciar voluntários de forma prática.
+- **Para a Plataforma**: gerar impacto social e receita por meio de assinaturas, anúncios e parcerias.
+
+⸻
+
+## ⚙ Principais Funcionalidades
+
+### Para Voluntários:
+- **Cadastro e Autenticação**: Registro de usuário com email e senha, login/logout seguro
+- **Perfil de Usuário**: Visualização e atualização de informações pessoais
+- **Busca de Projetos**: Filtros por causa, localização e status
+- **Inscrição em Projetos**: Sistema de join para participar de projetos voluntários
+- **Busca de Oportunidades**: Filtros por causa, localização e status
+- **Sistema de Avaliações**: Receber e dar avaliações para outros usuários e ONGs
+
+### Para Organizações (ONGs):
+- **Cadastro de ONG**: Registro com informações organizacionais, CNPJ e causas apoiadas
+- **Autenticação**: Login específico para ONGs com validação de tipo de usuário
+- **Gestão de Projetos**: Criação de projetos voluntários com detalhes e vagas
+- **Gestão de Campanhas**: Criação de campanhas de doação e oportunidades
+- **Filtros e Busca**: Sistema de filtros por cidade, estado e causas para encontrar voluntários
+- **Controle de Acesso**: Guardas de autenticação específicos para operações de ONG
+
+### Para a Plataforma:
+- **API REST Completa**: Endpoints documentados com Swagger/OpenAPI
+- **Sistema de Doações**: Processamento de doações para campanhas
+- **Sistema de Ratings**: Avaliações bidirecionais entre usuários e organizações
+- **Autenticação JWT**: Tokens seguros com controle de acesso por tipo de usuário
+- **Validação de Dados**: DTOs com validação automática usando class-validator
+- **Documentação Automática**: Swagger UI para testes e documentação da API
+
+⸻
+
+## 👥 Equipe de Desenvolvimento
+
+- **Talles Andrey de Oliveira** - 22401830
+- **Caio Duarte** - 22402764
+- **Isabela Vasconcellos** - 22400770
+- **Davi Barroso** - 22302158
+- **Felipe Fonseca** - 22402055
+
+⸻
+
+## 🏗️ Estrutura de Diretórios
+
+```
+projeto/
+├── src/                    # Código-fonte principal
+│   ├── auth/              # Autenticação e autorização
+│   ├── campaigns/         # Gestão de campanhas
+│   ├── common/            # Utilitários e configurações comuns
+│   ├── database/          # Configurações de banco de dados
+│   ├── donations/         # Sistema de doações
+│   ├── enrollments/       # Inscrições em oportunidades
+│   ├── ngos/              # Gestão de ONGs
+│   ├── opportunities/     # Oportunidades de voluntariado
+│   ├── projects/          # Gestão de projetos
+│   ├── ratings/           # Sistema de avaliações
+│   ├── users/             # Gestão de usuários
+│   ├── app.module.ts      # Módulo principal da aplicação
+│   └── main.ts            # Ponto de entrada da aplicação
+├── dist/                  # Código compilado
+├── docs/                  # Documentação
+├── tests/                 # Testes automatizados
+├── .env.example           # Exemplo de variáveis de ambiente
+├── package.json           # Dependências e scripts do projeto
+├── tsconfig.json          # Configuração do TypeScript
+├── nest-cli.json          # Configuração do NestJS CLI
+└── README.md              # Este arquivo
+```
+
+⸻
+
+## 🚀 Como Executar o Projeto
+
+### 1. Pré-requisitos
+
+- **Node.js** versão 18 ou superior
+- **PostgreSQL** versão 12 ou superior
+- **Yarn** ou **npm** para gerenciamento de dependências
+- **Git** para clonar o repositório
+
+### 2. Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/usuario/project-ong.git
+
+# Acesse a pasta do projeto
+cd project-ong
+
+# Instale as dependências
+yarn install
+# ou
+npm install
+```
+
+### 3. Configuração do Banco de Dados
+
+```bash
+# Crie um banco PostgreSQL chamado 'voluntariar'
+createdb voluntariar
+
+# Copie o arquivo de exemplo de variáveis de ambiente
+cp .env.example .env
+
+# Edite o arquivo .env com suas configurações de banco
+nano .env
+```
+
+**Configurações necessárias no arquivo `.env`:**
+```env
+DATABASE_HOST=localhost
+DATABASE_USERNAME=seu_usuario
+DATABASE_PASSWORD=sua_senha
+DATABASE_NAME=voluntariar
+DATABASE_PORT=5432
+JWT_SECRET=sua_chave_secreta_jwt
+```
+
+### 4. Execução
+
+```bash
+# Modo desenvolvimento (com hot-reload)
+yarn start:dev
+# ou
+npm run start:dev
+
+# Modo produção
+yarn start:prod
+# ou
+npm run start:prod
+
+# Build do projeto
+yarn build
+# ou
+npm run build
+```
+
+### 5. Acesso
+
+- **URL da API**: http://localhost:3333
+- **Documentação Swagger**: http://localhost:3333/api (quando disponível)
+
+### 6. Comandos Úteis
+
+```bash
+# Executar testes
+yarn test
+
+# Executar testes em modo watch
+yarn test:watch
+
+# Executar linting
+yarn lint
+
+# Formatar código
+yarn format
+```
+
+⸻
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Framework:** NestJS 11
-- **Banco de Dados:** PostgreSQL
-- **ORM:** TypeORM
-- **Autenticação:** JWT (JSON Web Tokens)
-- **Validação:** class-validator + class-transformer
-- **Documentação:** Swagger/OpenAPI
-- **Containerização:** Docker
-- **Linguagem:** TypeScript
+- **Backend**: NestJS (Node.js + TypeScript)
+- **Banco de Dados**: PostgreSQL com TypeORM
+- **Autenticação**: JWT com bcrypt
+- **Validação**: class-validator
+- **Documentação**: Swagger/OpenAPI
+- **Testes**: Jest
 
-## 📋 Pré-requisitos
+⸻
 
-- Node.js 18+ 
-- Yarn ou npm
-- Docker
-- PostgreSQL (via Docker ou local)
+## 📋 Scripts Disponíveis
 
-## 🚀 Configuração e Instalação
+- `yarn start` - Inicia a aplicação
+- `yarn start:dev` - Inicia em modo desenvolvimento com hot-reload
+- `yarn start:debug` - Inicia em modo debug
+- `yarn start:prod` - Inicia em modo produção
+- `yarn build` - Compila o projeto
+- `yarn test` - Executa os testes
+- `yarn test:watch` - Executa testes em modo watch
+- `yarn test:cov` - Executa testes com cobertura
+- `yarn lint` - Executa o linter
+- `yarn format` - Formata o código
 
-### 1. Clone o repositório
-```bash
-git clone <repository-url>
-cd ProjectOng
-```
+⸻
 
-### 2. Instale as dependências
-```bash
-yarn install
-```
+## 🔧 Configurações Adicionais
 
-### 3. Configure o banco de dados
+### Variáveis de Ambiente
 
-#### Opção A: Docker (Recomendado)
-```bash
-docker run --name postgres-ong \
-  -e POSTGRES_DB=voluntariar \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=password \
-  -p 5432:5432 \
-  -d postgres:15
-```
+Certifique-se de configurar todas as variáveis necessárias no arquivo `.env`:
 
-#### Opção B: PostgreSQL local
-Configure um banco PostgreSQL local com as credenciais especificadas no `.env`
+- `NODE_ENV`: Ambiente de execução (development, production, test)
+- `PORT`: Porta onde a aplicação será executada
+- `DATABASE_*`: Configurações do banco PostgreSQL
+- `JWT_SECRET`: Chave secreta para tokens JWT
 
-### 4. Configure as variáveis de ambiente
-```bash
-cp env.example .env
-# Edite o arquivo .env com suas configurações
-```
+### Banco de Dados
 
-### 5. Execute a aplicação
-```bash
-# Desenvolvimento
-yarn start:dev
+O projeto utiliza PostgreSQL com TypeORM. Certifique-se de:
 
-# Produção
-yarn build
-yarn start:prod
-```
+1. Ter o PostgreSQL instalado e rodando
+2. Criar um banco de dados chamado `voluntariar`
+3. Configurar as credenciais corretas no arquivo `.env`
 
-## 🌐 Endpoints da API
+⸻
 
-### 🔐 Autenticação
+## 📚 Documentação Adicional
 
-#### `POST /api/auth/register`
-- **Descrição:** Cadastro de usuário voluntário
-- **Autenticação:** Não requerida
-- **Body:**
-```json
-{
-  "name": "João Silva",
-  "email": "joao@email.com",
-  "password": "senha123",
-  "city": "São Paulo",
-  "state": "SP",
-  "skills": ["Gestão", "Comunicação"],
-  "preferredCauses": ["Educação", "Meio Ambiente"]
-}
-```
+- **NestJS**: https://nestjs.com/
+- **TypeORM**: https://typeorm.io/
+- **PostgreSQL**: https://www.postgresql.org/
 
-#### `POST /api/auth/login`
-- **Descrição:** Login de usuário voluntário
-- **Autenticação:** Não requerida
-- **Body:**
-```json
-{
-  "email": "joao@email.com",
-  "password": "senha123"
-}
-```
+⸻
 
-#### `POST /api/auth/logout`
-- **Descrição:** Logout do usuário
-- **Autenticação:** JWT Bearer Token
-- **Headers:** `Authorization: Bearer <token>`
+## 🤝 Contribuição
 
-### 👥 Usuários
+Para contribuir com o projeto:
 
-#### `GET /api/users/profile`
-- **Descrição:** Obter perfil do usuário autenticado
-- **Autenticação:** JWT Bearer Token
-- **Headers:** `Authorization: Bearer <token>`
+1. Faça um fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
 
-#### `PUT /api/users/profile`
-- **Descrição:** Atualizar perfil do usuário
-- **Autenticação:** JWT Bearer Token
-- **Headers:** `Authorization: Bearer <token>`
-- **Body:** Dados do perfil (parciais)
+⸻
 
-### 🏢 ONGs
+## 📄 Licença
 
-#### `POST /api/ngos`
-- **Descrição:** Cadastro de nova ONG
-- **Autenticação:** Não requerida
-- **Body:**
-```json
-{
-  "organizationName": "ONG Exemplo",
-  "cnpj": "12.345.678/0001-90",
-  "description": "Organização sem fins lucrativos",
-  "email": "contato@ongexemplo.org",
-  "password": "senha123",
-  "city": "São Paulo",
-  "state": "SP",
-  "causes": ["Educação", "Saúde"],
-  "areas": ["Assistência Social"],
-  "skills": ["Gestão de Projetos"],
-  "preferredCauses": ["Educação Infantil"]
-}
-```
+Este projeto está sob a licença UNLICENSED.
 
-#### `POST /api/ngos/login`
-- **Descrição:** Login de ONG
-- **Autenticação:** Não requerida
-- **Body:**
-```json
-{
-  "email": "contato@ongexemplo.org",
-  "password": "senha123"
-}
-```
+---
 
-#### `GET /api/ngos`
-- **Descrição:** Listar todas as ONGs
-- **Autenticação:** Não requerida
-- **Query Params:**
-  - `city` (opcional): Filtrar por cidade
-  - `state` (opcional): Filtrar por estado
-  - `causes` (opcional): Filtrar por causas (separadas por vírgula)
+## 📝 Observações
 
-#### `GET /api/ngos/:id`
-- **Descrição:** Obter ONG específica
-- **Autenticação:** Não requerida
-
-### 📋 Projetos
-
-#### `POST /api/projects`
-- **Descrição:** Criar novo projeto (APENAS ONGs)
-- **Autenticação:** JWT Bearer Token (ONG)
-- **Headers:** `Authorization: Bearer <token>`
-- **Body:**
-```json
-{
-  "title": "Projeto de Reflorestamento",
-  "description": "Ajudar a plantar árvores",
-  "location": "São Paulo, SP",
-  "cause": "Meio Ambiente",
-  "startDate": "2024-02-01",
-  "endDate": "2024-02-28",
-  "maxVolunteers": 10
-}
-```
-
-#### `GET /api/projects`
-- **Descrição:** Listar todos os projetos
-- **Autenticação:** Não requerida
-- **Query Params:**
-  - `cause` (opcional): Filtrar por causa
-  - `location` (opcional): Filtrar por localização
-  - `status` (opcional): Filtrar por status
-
-#### `GET /api/projects/:id`
-- **Descrição:** Obter projeto específico
-- **Autenticação:** Não requerida
-
-#### `POST /api/projects/:id/join`
-- **Descrição:** Inscrever-se em projeto (APENAS voluntários)
-- **Autenticação:** JWT Bearer Token (voluntário)
-- **Headers:** `Authorization: Bearer <token>`
-- **Query Params:**
-  - `status` (opcional): Status da inscrição
-  - `notes` (opcional): Observações
-
-### 🎯 Campanhas
-
-#### `GET /api/campaigns`
-- **Descrição:** Listar todas as campanhas
-- **Autenticação:** Não requerida
-
-#### `GET /api/campaigns/:id`
-- **Descrição:** Obter campanha específica
-- **Autenticação:** Não requerida
-
-#### `POST /api/campaigns/:id/donate`
-- **Descrição:** Fazer doação para campanha
-- **Autenticação:** Não requerida
-- **Body:**
-```json
-{
-  "amount": 100.50,
-  "donorName": "João Silva",
-  "donorEmail": "joao@email.com",
-  "message": "Parabéns pelo trabalho!",
-  "anonymous": false
-}
-```
-
-### ⭐ Avaliações
-
-#### `POST /api/ratings`
-- **Descrição:** Criar avaliação
-- **Autenticação:** Não requerida
-- **Body:**
-```json
-{
-  "userId": "uuid-do-usuario",
-  "score": 5,
-  "comment": "Excelente trabalho!",
-  "projectId": "uuid-do-projeto"
-}
-```
-
-#### `GET /api/ratings/user/:id`
-- **Descrição:** Obter avaliações de um usuário
-- **Autenticação:** Não requerida
-
-#### `GET /api/ratings/ong/:id`
-- **Descrição:** Obter avaliações de uma ONG
-- **Autenticação:** Não requerida
-
-## 🔐 Sistema de Autenticação
-
-### Tipos de Usuário
-- **`volunteer`:** Usuários que podem se inscrever em projetos
-- **`ngo`:** ONGs que podem criar projetos
-
-### Tokens JWT
-- **Expiração:** 365 dias (não expira)
-- **Invalidação:** Apenas via logout
-- **Formato:** `Authorization: Bearer <token>`
-
-### Guards de Autenticação
-- **`JwtAuthGuard`:** Para rotas que requerem qualquer usuário autenticado
-- **`NgoAuthGuard`:** Para rotas que requerem apenas ONGs autenticadas
-
-## 🗄️ Estrutura do Banco de Dados
-
-### Tabelas Principais
-- **`users`:** Voluntários
-- **`ngos`:** Organizações não governamentais
-- **`projects`:** Projetos de voluntariado
-- **`campaigns`:** Campanhas de doação
-- **`donations`:** Doações para campanhas
-- **`enrollments`:** Inscrições em projetos
-- **`ratings`:** Avaliações de usuários/ONGs
-
-### Relacionamentos
-- Usuários podem se inscrever em múltiplos projetos
-- ONGs podem criar múltiplos projetos
-- Projetos pertencem a uma ONG
-- Campanhas pertencem a uma ONG
-
-## 🚀 Comandos Úteis
-
-```bash
-# Desenvolvimento
-yarn start:dev
-
-# Build
-yarn build
-
-# Produção
-yarn start:prod
-
-# Lint
-yarn lint
-
-
-## 📚 Documentação da API
-
-Após iniciar a aplicação, acesse:
-- **Swagger UI:** `http://localhost:3000/api`
-- **API Base URL:** `http://localhost:3000/api`
-
-## 🔧 Variáveis de Ambiente
-
-Veja o arquivo `env.example` para todas as variáveis necessárias.
+- **Desenvolvimento**: O projeto está configurado para desenvolvimento local
+- **Banco de Dados**: Certifique-se de ter o PostgreSQL rodando antes de executar
+- **Porta**: A aplicação roda na porta 3333 por padrão
+- **Hot-reload**: Use `yarn start:dev` para desenvolvimento com recarregamento automático
+- **Testes**: Execute `yarn test` para verificar se tudo está funcionando
+- **Linting**: Use `yarn lint` para verificar a qualidade do código
 
 
 

@@ -1,10 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import type { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
-export class JwtAuthGuard implements CanActivate {
+export class LogoutAuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -17,10 +16,19 @@ export class JwtAuthGuard implements CanActivate {
 
     try {
       const payload = this.jwtService.verify(token);
+
+      // Aceitar apenas volunteer ou ngo
+      if (payload.userType !== 'volunteer' && payload.userType !== 'ngo') {
+        throw new UnauthorizedException('Invalid user type');
+      }
+
       // Adicionar o payload do token ao request para uso posterior
       request.user = payload;
       return true;
-    } catch {
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
       throw new UnauthorizedException('Invalid token');
     }
   }
