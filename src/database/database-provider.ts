@@ -1,4 +1,9 @@
 import { User } from 'src/users/entities/user.entity';
+import { Project } from 'src/projects/entities/project.entity';
+import { Campaign } from 'src/campaigns/entities/campaign.entity';
+import { Donation } from 'src/donations/entities/donation.entity';
+import { Enrollment } from 'src/enrollments/entities/enrollment.entity';
+import { Rating } from 'src/ratings/entities/rating.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import 'dotenv/config';
 
@@ -10,7 +15,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.DATABASE_NAME || 'voluntariar',
   port: Number(process.env.DATABASE_PORT) || 5432,
   synchronize: true,
-  entities: [User],
+  entities: [User, Project, Campaign, Donation, Enrollment, Rating],
   logging: process.env.NODE_ENV === 'development',
 };
 

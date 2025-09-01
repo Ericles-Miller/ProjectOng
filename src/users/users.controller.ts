@@ -1,50 +1,38 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Put, Body, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import type { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 
 @Controller('users')
 @ApiTags('users')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create a user' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiResponse({ status: 201, description: 'User created successfully' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @Get('profile')
+  @ApiOperation({ summary: 'Get user profile' })
+  @ApiResponse({ status: 200, description: 'Profile fetched successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async getProfile(@CurrentUser() user: JwtPayload) {
+    const userId = user.sub;
+    return await this.usersService.findOne(userId);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'Users fetched successfully' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a user by id' })
-  @ApiResponse({ status: 200, description: 'User fetched successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
-  }
-
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update a user by id' })
+  @Put('profile')
+  @ApiOperation({ summary: 'Update user profile' })
   @ApiBody({ type: UpdateUserDto })
-  @ApiParam({ name: 'id', description: 'User id' })
-  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({ status: 200, description: 'Profile updated successfully' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  async updateProfile(@Body() updateUserDto: UpdateUserDto, @CurrentUser() user: JwtPayload) {
+    const userId = user.sub;
+    await this.usersService.update(userId, updateUserDto);
+    return { message: 'Profile updated successfully' };
   }
 }
