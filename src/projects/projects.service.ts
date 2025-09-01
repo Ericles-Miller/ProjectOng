@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Enrollment } from 'src/enrollments/entities/enrollment.entity';
+import { JoinProjectDto } from './dto/join-project.Dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ProjectsService {
@@ -48,33 +50,83 @@ export class ProjectsService {
     }
   }
 
-  async findAll(cause?: string, location?: string, status?: string): Promise<Project[]> {
+  async findAll(
+    cause?: string,
+    location?: string,
+    status?: string,
+  ): Promise<{ project: Project; users: User[] }[]> {
     try {
-      return await this.projectsRepository.find({
+      const projects = await this.projectsRepository.find({
         where: { cause, location, status: status as 'open' | 'closed' | 'completed' },
       });
-    } catch {
+
+      const projectsWithUsers = await Promise.all(
+        projects.map(async (project) => {
+          const enrollments = await this.enrollmentsRepository.find({
+            where: { projectId: project.id },
+            relations: ['volunteer'],
+          });
+
+          const users = enrollments.map((enrollment) => {
+            return enrollment.volunteer;
+          });
+
+          return {
+            project,
+            users,
+          };
+        }),
+      );
+
+      return projectsWithUsers;
+    } catch (error) {
+      console.error('Error in findAll:', error);
       throw new InternalServerErrorException('Error finding projects');
     }
   }
 
-  async findOne(id: string): Promise<Project> {
+  async findOne(id: string): Promise<{ project: Project; users: User[] }> {
     try {
       const project = await this.projectsRepository.findOne({ where: { id } });
 
       if (!project) {
         throw new NotFoundException('Project not found');
       }
-      return project;
+
+      console.log('Project found:', project.title);
+
+      // Buscar apenas os usuários inscritos no projeto
+      try {
+        const enrollments = await this.enrollmentsRepository.find({
+          where: { projectId: id },
+          relations: ['volunteer'],
+        });
+
+        const users = enrollments.map((enrollment) => {
+          return enrollment.volunteer;
+        });
+
+        return {
+          project,
+          users,
+        };
+      } catch (enrollmentError) {
+        console.error('Error processing enrollments:', enrollmentError);
+        return {
+          project,
+          users: [],
+        };
+      }
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
+      console.error('Error in findOne:', error);
       throw new InternalServerErrorException('Error finding project');
     }
   }
 
-  async joinProject(id: string, volunteerId: string, status: string, notes?: string): Promise<void> {
+  async joinProject(volunteerId: string, { id, status, notes }: JoinProjectDto): Promise<void> {
     try {
       const project = await this.projectsRepository.findOne({ where: { id } });
 
@@ -102,7 +154,7 @@ export class ProjectsService {
 
       await this.enrollmentsRepository.save(enrollment);
     } catch (error) {
-      if (error instanceof BadRequestException) {
+      if (error instanceof BadRequestException || error instanceof NotFoundException) {
         throw error;
       }
       throw new InternalServerErrorException('Error joining project');

@@ -5,6 +5,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nes
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 @ApiTags('users')
@@ -15,10 +16,10 @@ export class UsersController {
 
   @Get('profile')
   @ApiOperation({ summary: 'Get user profile' })
-  @ApiResponse({ status: 200, description: 'Profile fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Profile fetched successfully', type: User })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  async getProfile(@CurrentUser() user: JwtPayload) {
+  async getProfile(@CurrentUser() user: JwtPayload): Promise<User> {
     const userId = user.sub;
     return await this.usersService.findOne(userId);
   }
@@ -26,13 +27,12 @@ export class UsersController {
   @Put('profile')
   @ApiOperation({ summary: 'Update user profile' })
   @ApiBody({ type: UpdateUserDto })
-  @ApiResponse({ status: 200, description: 'Profile updated successfully' })
+  @ApiResponse({ status: 200, description: 'Profile updated successfully', type: User })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  async updateProfile(@Body() updateUserDto: UpdateUserDto, @CurrentUser() user: JwtPayload) {
+  async updateProfile(@Body() updateUserDto: UpdateUserDto, @CurrentUser() user: JwtPayload): Promise<User> {
     const userId = user.sub;
-    await this.usersService.update(userId, updateUserDto);
-    return { message: 'Profile updated successfully' };
+    return await this.usersService.update(userId, updateUserDto);
   }
 }

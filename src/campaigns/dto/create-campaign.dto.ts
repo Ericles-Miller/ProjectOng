@@ -41,4 +41,12 @@ export class CreateCampaignDto {
   @IsDateString()
   @IsNotEmpty()
   endDate: string;
+
+  @ApiProperty({
+    description: 'Categoria da campanha',
+    example: 'campaign',
+  })
+  @IsString()
+  @IsNotEmpty()
+  category: 'campaign' | 'opportunity';
 }
