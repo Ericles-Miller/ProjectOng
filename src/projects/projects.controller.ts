@@ -7,6 +7,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { Project } from './entities/project.entity';
 import { ProjectsService } from './projects.service';
+import { JoinProjectDto } from './dto/join-project.Dto';
 
 @Controller('projects')
 @ApiTags('projects')
@@ -54,7 +55,7 @@ export class ProjectsController {
     return await this.projectsService.findOne(id);
   }
 
-  @Post(':id/join')
+  @Post('join')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Join a project (volunteer only)' })
@@ -64,17 +65,11 @@ export class ProjectsController {
   @ApiResponse({ status: 404, description: 'Project not found' })
   @ApiResponse({ status: 403, description: 'Forbidden - Only volunteers can join projects' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @ApiQuery({ name: 'status', required: false, description: 'Status of the enrollment' })
-  @ApiQuery({ name: 'notes', required: false, description: 'Notes of the enrollment' })
-  async joinProject(
-    @Param('id') id: string,
-    @CurrentUser() user: JwtPayload,
-    @Query('status') status: string,
-    @Query('notes') notes?: string,
-  ): Promise<void> {
+  async joinProject(@Body() joinProjectDto: JoinProjectDto, @CurrentUser() user: JwtPayload): Promise<void> {
     if (user.userType !== 'volunteer') {
       throw new ForbiddenException('Only volunteers can join projects');
     }
-    await this.projectsService.joinProject(id, user.sub, status, notes);
+    const userId = user.sub;
+    await this.projectsService.joinProject(userId, joinProjectDto);
   }
 }

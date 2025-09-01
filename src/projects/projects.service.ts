@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Enrollment } from 'src/enrollments/entities/enrollment.entity';
+import { JoinProjectDto } from './dto/join-project.Dto';
 
 @Injectable()
 export class ProjectsService {
@@ -74,7 +75,7 @@ export class ProjectsService {
     }
   }
 
-  async joinProject(id: string, volunteerId: string, status: string, notes?: string): Promise<void> {
+  async joinProject(volunteerId: string, { id, status, notes }: JoinProjectDto): Promise<void> {
     try {
       const project = await this.projectsRepository.findOne({ where: { id } });
 
@@ -102,7 +103,7 @@ export class ProjectsService {
 
       await this.enrollmentsRepository.save(enrollment);
     } catch (error) {
-      if (error instanceof BadRequestException) {
+      if (error instanceof BadRequestException || error instanceof NotFoundException) {
         throw error;
       }
       throw new InternalServerErrorException('Error joining project');
