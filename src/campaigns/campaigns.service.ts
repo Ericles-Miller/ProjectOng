@@ -88,15 +88,23 @@ export class CampaignsService {
         throw new NotFoundException('Campaign not found');
       }
 
+      if (campaign.status !== 'active') {
+        throw new BadRequestException('Campaign is not active');
+      }
+
       const donation = new Donation(amount, anonymous, id, message, donorName, donorEmail);
-      campaign.numberOfDonations++;
-      campaign.currentAmount += amount;
-      await this.campaignsRepository.save(campaign);
+
+      await this.campaignsRepository.update(id, {
+        numberOfDonations: campaign.numberOfDonations + 1,
+        currentAmount: Number(campaign.currentAmount) + Number(amount),
+      });
+
       await this.donationsRepository.save(donation);
     } catch (error) {
-      if (error instanceof NotFoundException) {
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
         throw error;
       }
+      console.error('Error in donate method:', error);
       throw new InternalServerErrorException('Error donating to campaign');
     }
   }
