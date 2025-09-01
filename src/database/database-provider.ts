@@ -1,4 +1,5 @@
 import { User } from 'src/users/entities/user.entity';
+import { Ngo } from 'src/ngos/entities/ngo.entity';
 import { Project } from 'src/projects/entities/project.entity';
 import { Campaign } from 'src/campaigns/entities/campaign.entity';
 import { Donation } from 'src/donations/entities/donation.entity';
@@ -15,7 +16,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.DATABASE_NAME || 'voluntariar',
   port: Number(process.env.DATABASE_PORT) || 5432,
   synchronize: true,
-  entities: [User, Project, Campaign, Donation, Enrollment, Rating],
+  entities: [User, Ngo, Project, Campaign, Donation, Enrollment, Rating],
   logging: process.env.NODE_ENV === 'development',
 };
 

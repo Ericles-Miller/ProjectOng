@@ -7,6 +7,7 @@ import { CampaignsModule } from './campaigns/campaigns.module';
 import { DonationsModule } from './donations/donations.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { dataSourceOptions } from './database/database-provider';
+import { NgosModule } from './ngos/ngos.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { dataSourceOptions } from './database/database-provider';
     CampaignsModule,
     DonationsModule,
     RatingsModule,
+    NgosModule,
   ],
   controllers: [],
   providers: [],
