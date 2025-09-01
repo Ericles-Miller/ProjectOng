@@ -58,7 +58,7 @@ export class ProjectsController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Join a project (volunteer only)' })
-  @ApiResponse({ status: 201, description: 'Successfully joined project', type: Project })
+  @ApiResponse({ status: 201, description: 'Successfully joined project' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Project not found' })
