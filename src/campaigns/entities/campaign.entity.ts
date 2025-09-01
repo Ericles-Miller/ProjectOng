@@ -41,6 +41,10 @@ export class Campaign {
   ngo: Ngo;
 
   @ApiProperty()
+  @Column({ type: 'varchar', length: 20, default: 'campaign' })
+  category: 'campaign' | 'opportunity';
+
+  @ApiProperty()
   @Column({ type: 'uuid', nullable: false })
   ngoId: string;
 
@@ -55,6 +59,7 @@ export class Campaign {
     startDate: Date,
     endDate: Date,
     ngoId: string,
+    category: 'campaign' | 'opportunity',
   ) {
     this.title = title;
     this.description = description;
@@ -62,5 +67,6 @@ export class Campaign {
     this.startDate = startDate;
     this.endDate = endDate;
     this.ngoId = ngoId;
+    this.category = category;
   }
 }

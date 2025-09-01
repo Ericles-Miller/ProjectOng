@@ -19,7 +19,7 @@ export class CampaignsService {
   ) {}
 
   async create(
-    { title, description, goalAmount, startDate, endDate }: CreateCampaignDto,
+    { title, description, goalAmount, startDate, endDate, category }: CreateCampaignDto,
     ngoId: string,
   ): Promise<Campaign> {
     try {
@@ -36,6 +36,7 @@ export class CampaignsService {
         new Date(startDate),
         new Date(endDate),
         ngoId,
+        category,
       );
 
       return await this.campaignsRepository.save(campaign);
@@ -47,9 +48,13 @@ export class CampaignsService {
     }
   }
 
-  async findAll(): Promise<Campaign[]> {
+  async findAll(
+    title?: string,
+    category?: 'campaign' | 'opportunity',
+    status?: 'active' | 'completed' | 'cancelled',
+  ): Promise<Campaign[]> {
     try {
-      return await this.campaignsRepository.find();
+      return await this.campaignsRepository.find({ where: { title, category, status } });
     } catch {
       throw new InternalServerErrorException('Error fetching campaigns');
     }

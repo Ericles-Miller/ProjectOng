@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, UseGuards, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { CreateDonationDto } from '../donations/dto/create-donation.dto';
 import { CampaignsService } from './campaigns.service';
@@ -33,8 +33,15 @@ export class CampaignsController {
   @Get()
   @ApiOperation({ summary: 'Get all campaigns' })
   @ApiResponse({ status: 200, description: 'Campaigns fetched successfully', type: [Campaign] })
-  async findAll(): Promise<Campaign[]> {
-    return await this.campaignsService.findAll();
+  @ApiQuery({ name: 'title', required: false, description: 'Filter by title' })
+  @ApiQuery({ name: 'category', required: false, description: 'Filter by category' })
+  @ApiQuery({ name: 'status', required: false, description: 'Filter by status' })
+  async findAll(
+    @Query('title') title?: string,
+    @Query('category') category?: 'campaign' | 'opportunity',
+    @Query('status') status?: 'active' | 'completed' | 'cancelled',
+  ): Promise<Campaign[]> {
+    return await this.campaignsService.findAll(title, category, status);
   }
 
   @Get(':id')
