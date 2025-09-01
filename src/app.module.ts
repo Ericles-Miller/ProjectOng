@@ -8,6 +8,7 @@ import { DonationsModule } from './donations/donations.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { dataSourceOptions } from './database/database-provider';
 import { NgosModule } from './ngos/ngos.module';
+import { OpportunitiesModule } from './opportunities/opportunities.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { NgosModule } from './ngos/ngos.module';
     DonationsModule,
     RatingsModule,
     NgosModule,
+    OpportunitiesModule,
   ],
   controllers: [],
   providers: [],
