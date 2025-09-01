@@ -52,6 +52,10 @@ export class Campaign {
   @CreateDateColumn()
   createdAt: Date;
 
+  @ApiProperty()
+  @Column({ type: 'int', default: 0 })
+  numberOfDonations: number;
+
   constructor(
     title: string,
     description: string,

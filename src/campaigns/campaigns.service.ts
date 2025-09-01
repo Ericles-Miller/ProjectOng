@@ -89,7 +89,9 @@ export class CampaignsService {
       }
 
       const donation = new Donation(amount, anonymous, id, message, donorName, donorEmail);
-
+      campaign.numberOfDonations++;
+      campaign.currentAmount += amount;
+      await this.campaignsRepository.save(campaign);
       await this.donationsRepository.save(donation);
     } catch (error) {
       if (error instanceof NotFoundException) {
