@@ -1,99 +1,306 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 ProjectOng API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API para gerenciamento de ONGs e voluntários, permitindo a criação de projetos, campanhas de doação e sistema de avaliações.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🛠️ Tecnologias Utilizadas
 
-## Description
+- **Framework:** NestJS 11
+- **Banco de Dados:** PostgreSQL
+- **ORM:** TypeORM
+- **Autenticação:** JWT (JSON Web Tokens)
+- **Validação:** class-validator + class-transformer
+- **Documentação:** Swagger/OpenAPI
+- **Containerização:** Docker
+- **Linguagem:** TypeScript
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📋 Pré-requisitos
 
-## Project setup
+- Node.js 18+ 
+- Yarn ou npm
+- Docker
+- PostgreSQL (via Docker ou local)
 
+## 🚀 Configuração e Instalação
+
+### 1. Clone o repositório
 ```bash
-$ yarn install
+git clone <repository-url>
+cd ProjectOng
 ```
 
-## Compile and run the project
-
+### 2. Instale as dependências
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn install
 ```
 
-## Run tests
+### 3. Configure o banco de dados
 
+#### Opção A: Docker (Recomendado)
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+docker run --name postgres-ong \
+  -e POSTGRES_DB=voluntariar \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  -p 5432:5432 \
+  -d postgres:15
 ```
 
-## Deployment
+#### Opção B: PostgreSQL local
+Configure um banco PostgreSQL local com as credenciais especificadas no `.env`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### 4. Configure as variáveis de ambiente
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+cp env.example .env
+# Edite o arquivo .env com suas configurações
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 5. Execute a aplicação
+```bash
+# Desenvolvimento
+yarn start:dev
 
-## Resources
+# Produção
+yarn build
+yarn start:prod
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## 🌐 Endpoints da API
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 🔐 Autenticação
 
-## Support
+#### `POST /api/auth/register`
+- **Descrição:** Cadastro de usuário voluntário
+- **Autenticação:** Não requerida
+- **Body:**
+```json
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "password": "senha123",
+  "city": "São Paulo",
+  "state": "SP",
+  "skills": ["Gestão", "Comunicação"],
+  "preferredCauses": ["Educação", "Meio Ambiente"]
+}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### `POST /api/auth/login`
+- **Descrição:** Login de usuário voluntário
+- **Autenticação:** Não requerida
+- **Body:**
+```json
+{
+  "email": "joao@email.com",
+  "password": "senha123"
+}
+```
 
-## Stay in touch
+#### `POST /api/auth/logout`
+- **Descrição:** Logout do usuário
+- **Autenticação:** JWT Bearer Token
+- **Headers:** `Authorization: Bearer <token>`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 👥 Usuários
 
-## License
+#### `GET /api/users/profile`
+- **Descrição:** Obter perfil do usuário autenticado
+- **Autenticação:** JWT Bearer Token
+- **Headers:** `Authorization: Bearer <token>`
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-# ProjectOng
+#### `PUT /api/users/profile`
+- **Descrição:** Atualizar perfil do usuário
+- **Autenticação:** JWT Bearer Token
+- **Headers:** `Authorization: Bearer <token>`
+- **Body:** Dados do perfil (parciais)
+
+### 🏢 ONGs
+
+#### `POST /api/ngos`
+- **Descrição:** Cadastro de nova ONG
+- **Autenticação:** Não requerida
+- **Body:**
+```json
+{
+  "organizationName": "ONG Exemplo",
+  "cnpj": "12.345.678/0001-90",
+  "description": "Organização sem fins lucrativos",
+  "email": "contato@ongexemplo.org",
+  "password": "senha123",
+  "city": "São Paulo",
+  "state": "SP",
+  "causes": ["Educação", "Saúde"],
+  "areas": ["Assistência Social"],
+  "skills": ["Gestão de Projetos"],
+  "preferredCauses": ["Educação Infantil"]
+}
+```
+
+#### `POST /api/ngos/login`
+- **Descrição:** Login de ONG
+- **Autenticação:** Não requerida
+- **Body:**
+```json
+{
+  "email": "contato@ongexemplo.org",
+  "password": "senha123"
+}
+```
+
+#### `GET /api/ngos`
+- **Descrição:** Listar todas as ONGs
+- **Autenticação:** Não requerida
+- **Query Params:**
+  - `city` (opcional): Filtrar por cidade
+  - `state` (opcional): Filtrar por estado
+  - `causes` (opcional): Filtrar por causas (separadas por vírgula)
+
+#### `GET /api/ngos/:id`
+- **Descrição:** Obter ONG específica
+- **Autenticação:** Não requerida
+
+### 📋 Projetos
+
+#### `POST /api/projects`
+- **Descrição:** Criar novo projeto (APENAS ONGs)
+- **Autenticação:** JWT Bearer Token (ONG)
+- **Headers:** `Authorization: Bearer <token>`
+- **Body:**
+```json
+{
+  "title": "Projeto de Reflorestamento",
+  "description": "Ajudar a plantar árvores",
+  "location": "São Paulo, SP",
+  "cause": "Meio Ambiente",
+  "startDate": "2024-02-01",
+  "endDate": "2024-02-28",
+  "maxVolunteers": 10
+}
+```
+
+#### `GET /api/projects`
+- **Descrição:** Listar todos os projetos
+- **Autenticação:** Não requerida
+- **Query Params:**
+  - `cause` (opcional): Filtrar por causa
+  - `location` (opcional): Filtrar por localização
+  - `status` (opcional): Filtrar por status
+
+#### `GET /api/projects/:id`
+- **Descrição:** Obter projeto específico
+- **Autenticação:** Não requerida
+
+#### `POST /api/projects/:id/join`
+- **Descrição:** Inscrever-se em projeto (APENAS voluntários)
+- **Autenticação:** JWT Bearer Token (voluntário)
+- **Headers:** `Authorization: Bearer <token>`
+- **Query Params:**
+  - `status` (opcional): Status da inscrição
+  - `notes` (opcional): Observações
+
+### 🎯 Campanhas
+
+#### `GET /api/campaigns`
+- **Descrição:** Listar todas as campanhas
+- **Autenticação:** Não requerida
+
+#### `GET /api/campaigns/:id`
+- **Descrição:** Obter campanha específica
+- **Autenticação:** Não requerida
+
+#### `POST /api/campaigns/:id/donate`
+- **Descrição:** Fazer doação para campanha
+- **Autenticação:** Não requerida
+- **Body:**
+```json
+{
+  "amount": 100.50,
+  "donorName": "João Silva",
+  "donorEmail": "joao@email.com",
+  "message": "Parabéns pelo trabalho!",
+  "anonymous": false
+}
+```
+
+### ⭐ Avaliações
+
+#### `POST /api/ratings`
+- **Descrição:** Criar avaliação
+- **Autenticação:** Não requerida
+- **Body:**
+```json
+{
+  "userId": "uuid-do-usuario",
+  "score": 5,
+  "comment": "Excelente trabalho!",
+  "projectId": "uuid-do-projeto"
+}
+```
+
+#### `GET /api/ratings/user/:id`
+- **Descrição:** Obter avaliações de um usuário
+- **Autenticação:** Não requerida
+
+#### `GET /api/ratings/ong/:id`
+- **Descrição:** Obter avaliações de uma ONG
+- **Autenticação:** Não requerida
+
+## 🔐 Sistema de Autenticação
+
+### Tipos de Usuário
+- **`volunteer`:** Usuários que podem se inscrever em projetos
+- **`ngo`:** ONGs que podem criar projetos
+
+### Tokens JWT
+- **Expiração:** 365 dias (não expira)
+- **Invalidação:** Apenas via logout
+- **Formato:** `Authorization: Bearer <token>`
+
+### Guards de Autenticação
+- **`JwtAuthGuard`:** Para rotas que requerem qualquer usuário autenticado
+- **`NgoAuthGuard`:** Para rotas que requerem apenas ONGs autenticadas
+
+## 🗄️ Estrutura do Banco de Dados
+
+### Tabelas Principais
+- **`users`:** Voluntários
+- **`ngos`:** Organizações não governamentais
+- **`projects`:** Projetos de voluntariado
+- **`campaigns`:** Campanhas de doação
+- **`donations`:** Doações para campanhas
+- **`enrollments`:** Inscrições em projetos
+- **`ratings`:** Avaliações de usuários/ONGs
+
+### Relacionamentos
+- Usuários podem se inscrever em múltiplos projetos
+- ONGs podem criar múltiplos projetos
+- Projetos pertencem a uma ONG
+- Campanhas pertencem a uma ONG
+
+## 🚀 Comandos Úteis
+
+```bash
+# Desenvolvimento
+yarn start:dev
+
+# Build
+yarn build
+
+# Produção
+yarn start:prod
+
+# Lint
+yarn lint
+
+
+## 📚 Documentação da API
+
+Após iniciar a aplicação, acesse:
+- **Swagger UI:** `http://localhost:3000/api`
+- **API Base URL:** `http://localhost:3000/api`
+
+## 🔧 Variáveis de Ambiente
+
+Veja o arquivo `env.example` para todas as variáveis necessárias.
+
+
+
