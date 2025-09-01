@@ -17,7 +17,7 @@ export class ProjectsController {
   @UseGuards(NgoAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new volunteer project (ONG only)' })
-  @ApiResponse({ status: 201, description: 'Project created successfully' })
+  @ApiResponse({ status: 201, description: 'Project created successfully', type: Project })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden - Only NGOs can create projects' })
@@ -35,7 +35,7 @@ export class ProjectsController {
   @ApiQuery({ name: 'cause', required: false, description: 'Filter by cause type' })
   @ApiQuery({ name: 'location', required: false, description: 'Filter by location' })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status' })
-  @ApiResponse({ status: 200, description: 'Projects fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Projects fetched successfully', type: [Project] })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async findAll(
     @Query('cause') cause?: string,
@@ -47,7 +47,7 @@ export class ProjectsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get project by id' })
-  @ApiResponse({ status: 200, description: 'Project fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Project fetched successfully', type: Project })
   @ApiResponse({ status: 404, description: 'Project not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async findOne(@Param('id') id: string): Promise<Project> {
@@ -58,7 +58,7 @@ export class ProjectsController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Join a project (volunteer only)' })
-  @ApiResponse({ status: 201, description: 'Successfully joined project' })
+  @ApiResponse({ status: 201, description: 'Successfully joined project', type: Project })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Project not found' })

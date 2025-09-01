@@ -16,7 +16,7 @@ export class OpportunitiesController {
   @UseGuards(NgoAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new volunteer opportunity' })
-  @ApiResponse({ status: 201, description: 'Opportunity created successfully' })
+  @ApiResponse({ status: 201, description: 'Opportunity created successfully', type: Opportunity })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: CreateOpportunityDto })
@@ -33,7 +33,7 @@ export class OpportunitiesController {
   @ApiQuery({ name: 'cause', required: false, description: 'Filter by cause type' })
   @ApiQuery({ name: 'location', required: false, description: 'Filter by location' })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status' })
-  @ApiResponse({ status: 200, description: 'Opportunities fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Opportunities fetched successfully', type: [Opportunity] })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async findAll(
     @Query('cause') cause?: string,
@@ -45,7 +45,7 @@ export class OpportunitiesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get opportunity by id' })
-  @ApiResponse({ status: 200, description: 'Opportunity fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Opportunity fetched successfully', type: Opportunity })
   @ApiResponse({ status: 404, description: 'Opportunity not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async findOne(@Param('id') id: string): Promise<Opportunity> {

@@ -11,7 +11,7 @@ export class RatingsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a rating' })
-  @ApiResponse({ status: 201, description: 'Rating created successfully' })
+  @ApiResponse({ status: 201, description: 'Rating created successfully', type: Rating })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: CreateRatingDto })
@@ -21,7 +21,7 @@ export class RatingsController {
 
   @Get('user/:id')
   @ApiOperation({ summary: 'Get ratings for a specific user' })
-  @ApiResponse({ status: 200, description: 'Ratings fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Ratings fetched successfully', type: [Rating] })
   @ApiResponse({ status: 404, description: 'User not found' })
   async getUserRatings(@Param('id') id: string): Promise<Rating[]> {
     return await this.ratingsService.getRacingByUser(id);
@@ -29,7 +29,7 @@ export class RatingsController {
 
   @Get('ong/:id')
   @ApiOperation({ summary: 'Get ratings for a specific NGO' })
-  @ApiResponse({ status: 200, description: 'Ratings fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Ratings fetched successfully', type: [Rating] })
   @ApiResponse({ status: 404, description: 'NGO not found' })
   async getNgoRatings(@Param('id') id: string): Promise<Rating[]> {
     return await this.ratingsService.getRacingByProject(id);

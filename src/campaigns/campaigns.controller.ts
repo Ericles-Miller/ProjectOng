@@ -17,7 +17,7 @@ export class CampaignsController {
   @UseGuards(NgoAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new campaign (ONG only)' })
-  @ApiResponse({ status: 201, description: 'Campaign created successfully' })
+  @ApiResponse({ status: 201, description: 'Campaign created successfully', type: Campaign })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
@@ -32,14 +32,14 @@ export class CampaignsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all campaigns' })
-  @ApiResponse({ status: 200, description: 'Campaigns fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Campaigns fetched successfully', type: [Campaign] })
   async findAll(): Promise<Campaign[]> {
     return await this.campaignsService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get campaign by id' })
-  @ApiResponse({ status: 200, description: 'Campaign fetched successfully' })
+  @ApiResponse({ status: 200, description: 'Campaign fetched successfully', type: Campaign })
   @ApiResponse({ status: 404, description: 'Campaign not found' })
   async findOne(@Param('id') id: string): Promise<Campaign> {
     return await this.campaignsService.findOne(id);
@@ -47,7 +47,7 @@ export class CampaignsController {
 
   @Post(':id/donate')
   @ApiOperation({ summary: 'Make a donation to a campaign' })
-  @ApiResponse({ status: 201, description: 'Donation made successfully' })
+  @ApiResponse({ status: 201, description: 'Donation made successfully', type: Campaign })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 404, description: 'Campaign not found' })
   async donate(@Param('id') id: string, @Body() createDonationDto: CreateDonationDto): Promise<void> {

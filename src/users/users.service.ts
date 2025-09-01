@@ -91,7 +91,7 @@ export class UsersService {
   async update(
     id: string,
     { name, password, city, state, userType, skills, experience, preferredCauses }: UpdateUserDto,
-  ): Promise<void> {
+  ): Promise<User> {
     try {
       const user = await this.usersRepository.findOne({ where: { id } });
 
@@ -108,7 +108,7 @@ export class UsersService {
       user.experience = experience || user.experience;
       user.preferredCauses = preferredCauses || user.preferredCauses;
 
-      await this.usersRepository.save(user);
+      return await this.usersRepository.save(user);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
