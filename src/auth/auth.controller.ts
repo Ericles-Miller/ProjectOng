@@ -1,5 +1,14 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Headers } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  BadRequestException,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
@@ -7,6 +16,8 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { LoginResponseEntity } from './entities/login-response.entity';
 import { LogoutResponseEntity } from './entities/logout-response.entity';
+import { LogoutAuthGuard } from './logout-auth.guard';
+import type { Request } from 'express';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -36,15 +47,22 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Logout user' })
-  @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
+  @UseGuards(LogoutAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Logout user or NGO' })
   @ApiResponse({ status: 200, description: 'Logout successful', type: LogoutResponseEntity })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  logout(@Headers('authorization') authHeader: string) {
+  @ApiResponse({ status: 400, description: 'Bad Request - No token provided' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid token' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Invalid user type' })
+  logout(@Req() request: Request): LogoutResponseEntity {
+    // Extrair o token do header Authorization
+    const authHeader = request.headers.authorization;
     const token = authHeader?.replace('Bearer ', '');
+
     if (!token) {
-      throw new Error('No token provided');
+      throw new BadRequestException('No token provided');
     }
+
     return this.authService.logout(token);
   }
 }
