@@ -6,8 +6,10 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { Project } from './entities/project.entity';
+import { ProjectWithUsersEntity } from './entities/project-with-users.entity';
 import { ProjectsService } from './projects.service';
 import { JoinProjectDto } from './dto/join-project.Dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('projects')
 @ApiTags('projects')
@@ -32,26 +34,26 @@ export class ProjectsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all projects with optional filters' })
+  @ApiOperation({ summary: 'Get all projects with optional filters and enrolled users' })
   @ApiQuery({ name: 'cause', required: false, description: 'Filter by cause type' })
   @ApiQuery({ name: 'location', required: false, description: 'Filter by location' })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status' })
-  @ApiResponse({ status: 200, description: 'Projects fetched successfully', type: [Project] })
+  @ApiResponse({ status: 200, description: 'Projects fetched successfully', type: [ProjectWithUsersEntity] })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async findAll(
     @Query('cause') cause?: string,
     @Query('location') location?: string,
     @Query('status') status?: string,
-  ): Promise<Project[]> {
+  ): Promise<{ project: Project; users: User[] }[]> {
     return await this.projectsService.findAll(cause, location, status);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get project by id' })
-  @ApiResponse({ status: 200, description: 'Project fetched successfully', type: Project })
+  @ApiOperation({ summary: 'Get project by id with enrolled users' })
+  @ApiResponse({ status: 200, description: 'Project fetched successfully', type: ProjectWithUsersEntity })
   @ApiResponse({ status: 404, description: 'Project not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  async findOne(@Param('id') id: string): Promise<Project> {
+  async findOne(@Param('id') id: string): Promise<{ project: Project; users: User[] }> {
     return await this.projectsService.findOne(id);
   }
 
