@@ -53,11 +53,8 @@ export class User {
   @OneToMany(() => Enrollment, (enrollment) => enrollment.volunteer)
   enrollments: Enrollment[];
 
-  @OneToMany(() => Rating, (rating) => rating.fromUser)
+  @OneToMany(() => Rating, (rating) => rating.user)
   ratingsGiven: Rating[];
-
-  @OneToMany(() => Rating, (rating) => rating.toUser)
-  ratingsReceived: Rating[];
 
   @OneToMany(() => Donation, (donation) => donation.donor)
   donations: Donation[];
