@@ -17,9 +17,29 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create({ name, email, password, city, state }: CreateUserDto): Promise<User> {
+  async create({
+    name,
+    email,
+    password,
+    city,
+    state,
+    userType,
+    skills,
+    experience,
+    preferredCauses,
+  }: CreateUserDto): Promise<User> {
     try {
-      const user = new User(name, email, password, city, state);
+      const user = new User(
+        name,
+        email,
+        password,
+        city,
+        state,
+        userType,
+        skills,
+        experience,
+        preferredCauses,
+      );
 
       const emailExists = await this.usersRepository.findOne({ where: { email } });
 
@@ -33,14 +53,6 @@ export class UsersService {
         throw error;
       }
       throw new InternalServerErrorException('Error creating user');
-    }
-  }
-
-  async findAll(): Promise<User[]> {
-    try {
-      return await this.usersRepository.find();
-    } catch {
-      throw new InternalServerErrorException('Error finding users');
     }
   }
 
@@ -60,7 +72,26 @@ export class UsersService {
     }
   }
 
-  async update(id: string, { name, password, city, state }: UpdateUserDto): Promise<void> {
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      const user = await this.usersRepository.findOne({ where: { email } });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Error finding user');
+    }
+  }
+
+  async update(
+    id: string,
+    { name, password, city, state, userType, skills, experience, preferredCauses }: UpdateUserDto,
+  ): Promise<void> {
     try {
       const user = await this.usersRepository.findOne({ where: { id } });
 
@@ -68,10 +99,14 @@ export class UsersService {
         throw new NotFoundException('User not found');
       }
 
-      user.name = name;
-      user.password = password;
-      user.city = city;
-      user.state = state;
+      user.name = name || user.name;
+      user.password = password || user.password;
+      user.city = city || user.city;
+      user.state = state || user.state;
+      user.userType = userType || user.userType;
+      user.skills = skills || user.skills;
+      user.experience = experience || user.experience;
+      user.preferredCauses = preferredCauses || user.preferredCauses;
 
       await this.usersRepository.save(user);
     } catch (error) {
