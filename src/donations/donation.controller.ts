@@ -14,7 +14,7 @@ export class DonationController {
   }
 
   @Get('/:campaignId')
-  async findDonationsByCampaignId(@Param('campaignId') id: string): Promise<Donation[]> {
+  async findDonationsByCampaignId(@Param('campaignId') id: string): Promise<Donation> {
     return await this.donationService.findDonationsByCampaignId(id);
   }
 }
