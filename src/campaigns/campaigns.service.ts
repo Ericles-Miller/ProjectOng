@@ -10,12 +10,14 @@ import {
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { Donation } from 'src/donations/entities/donation.entity';
 import { CreateDonationDto } from 'src/donations/dto/create-donation.dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class CampaignsService {
   constructor(
     @InjectRepository(Campaign) private readonly campaignsRepository: Repository<Campaign>,
     @InjectRepository(Donation) private readonly donationsRepository: Repository<Donation>,
+    @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
 
   async create(
@@ -92,7 +94,13 @@ export class CampaignsService {
         throw new BadRequestException('Campaign is not active');
       }
 
-      const donation = new Donation(amount, anonymous, id, message, donorName, donorEmail);
+      const user = await this.usersRepository.findOne({ where: { id: donorEmail } });
+      let donation: Donation;
+      if (user) {
+        donation = new Donation(amount, anonymous, id, message, donorName, donorEmail, user.id);
+      } else {
+        donation = new Donation(amount, anonymous, id, message, donorName, donorEmail);
+      }
 
       await this.campaignsRepository.update(id, {
         numberOfDonations: campaign.numberOfDonations + 1,
