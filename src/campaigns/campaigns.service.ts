@@ -81,7 +81,7 @@ export class CampaignsService {
 
   async donate(
     id: string,
-    { amount, donorName, donorEmail, message, anonymous }: CreateDonationDto,
+    { amount, donorEmail, message, anonymous, userId }: CreateDonationDto,
   ): Promise<void> {
     try {
       const campaign = await this.campaignsRepository.findOne({ where: { id } });
@@ -94,12 +94,12 @@ export class CampaignsService {
         throw new BadRequestException('Campaign is not active');
       }
 
-      const user = await this.usersRepository.findOne({ where: { id: donorEmail } });
+      const user = await this.usersRepository.findOne({ where: { id: userId } });
       let donation: Donation;
       if (user) {
-        donation = new Donation(amount, anonymous, id, message, donorName, donorEmail, user.id);
+        donation = new Donation(amount, anonymous, id, message, user.name, user.email, user.id);
       } else {
-        donation = new Donation(amount, anonymous, id, message, donorName, donorEmail);
+        donation = new Donation(amount, anonymous, id, message);
       }
 
       await this.campaignsRepository.update(id, {
