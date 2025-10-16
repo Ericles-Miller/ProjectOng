@@ -79,10 +79,7 @@ export class CampaignsService {
     }
   }
 
-  async donate(
-    id: string,
-    { amount, donorEmail, message, anonymous, userId }: CreateDonationDto,
-  ): Promise<void> {
+  async donate(id: string, { amount, message, anonymous, userId }: CreateDonationDto): Promise<void> {
     try {
       const campaign = await this.campaignsRepository.findOne({ where: { id } });
 
